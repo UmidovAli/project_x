@@ -89,20 +89,55 @@
 
 
 ```css
-[ Web / Mobile App ]   [ Telegram Bot ]
-          │                     │
-          └──────────────┐──────┘
-                         ↓
-                [ Backend (API) ]
+                        ┌───────────────────────────────┐
+                        │       CurrencyTracker         │
+                        │       Архитектура             │
+                        └───────────────────────────────┘
+                                   │
+          ┌────────────────────────┴─────────────────────────┐
+          │                                                  │
+  ┌───────────────┐                                  ┌───────────────┐
+  │   Web App     │                                  │  Mobile App   │
+  │  (React)      │                                  │ Kotlin + Jetpack│
+  └───────────────┘                                  └───────────────┘
+          │                                                  │
+          └──────────────┐──────────────┐───────────────────┘
                          │
-                         ↓
-             [ Внешние API валют ]
-                         │
-                         ↓
-               [ База данных PostgreSQL ]
+                 ┌───────────────┐
+                 │   Backend API │
+                 │Spring Boot /  │
+                 │Node.js Express│
+                 └───────────────┘
+                  │        │        │
+        ┌─────────┘        │        └─────────┐
+        │                  │                  │
+┌───────────────┐   ┌───────────────┐   ┌───────────────┐
+│ PostgreSQL DB │   │ External APIs │   │ Telegram Bot  │
+│ users,        │   │ exchangerate, │   │ aiogram /     │
+│ currencies,   │   │ CurrencyAPI   │   │ telegraf     │
+│ favorites,    │   └───────────────┘   └───────────────┘
+│ alerts,       │
+│ history       │
+└───────────────┘
+          │
+          ▼
+   Notifications
+ (Push / Email / Telegram)
 
 ```
+Как это работает:
 
+Web App и Mobile App — отправляют запросы на Backend через REST API.
+
+Telegram Bot — отдельный клиент, получает данные через Bot API/Webhooks.
+
+Backend API — обрабатывает запросы, общается с внешними API и базой данных.
+
+PostgreSQL Database — хранит пользователей, избранное, уведомления и историю курсов.
+
+External APIs — источник актуальных курсов валют.
+
+Notifications — Backend отправляет push, email и сообщения в Telegram при срабатывании условий.
 
 ## План развития
 
