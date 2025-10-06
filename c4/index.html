@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>C4 Диаграммы — Трекер Валют</title>
+  <style>
+    body {
+      font-family: "Segoe UI", sans-serif;
+      margin: 0;
+      background: #f3f4f6;
+      color: #222;
+    }
+    header {
+      text-align: center;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      padding: 40px 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+    header h1 {
+      margin: 0;
+      font-size: 2rem;
+    }
+    .tabs {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 20px 0;
+    }
+    .tab {
+      border: none;
+      background: #e5e7eb;
+      padding: 10px 20px;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: 0.2s;
+      font-weight: 600;
+    }
+    .tab:hover {
+      background: #c7d2fe;
+    }
+    .tab.active {
+      background: #667eea;
+      color: white;
+    }
+    .diagram {
+      display: none;
+      text-align: center;
+      background: white;
+      margin: 0 auto;
+      max-width: 900px;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+    }
+    .diagram.active {
+      display: block;
+    }
+    svg {
+      max-width: 100%;
+      height: auto;
+    }
+    .legend {
+      margin-top: 15px;
+      text-align: left;
+      font-size: 0.9rem;
+    }
+    .legend span {
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      border-radius: 3px;
+      margin-right: 6px;
+      vertical-align: middle;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>🏗️ C4 Диаграммы — Трекер Валют</h1>
+  <p>Системный контекст, контейнеры и компоненты</p>
+</header>
+
+<div class="tabs">
+  <button class="tab active" onclick="show('context')">🌐 Контекст</button>
+  <button class="tab" onclick="show('container')">📦 Контейнеры</button>
+  <button class="tab" onclick="show('component')">🔧 Компоненты</button>
+</div>
+
+<!-- Системный контекст -->
+<div id="context" class="diagram active">
+  <h2>Системный контекст</h2>
+  <svg viewBox="0 0 800 400">
+    <rect x="40" y="150" width="120" height="80" fill="#f3e5f5" stroke="#7b1fa2" rx="10"/>
+    <text x="100" y="195" text-anchor="middle" font-weight="600">Пользователь</text>
+
+    <rect x="300" y="150" width="190" height="80" fill="#e8f5e9" stroke="#388e3c" rx="10"/>
+    <text x="410" y="195" text-anchor="middle" font-weight="600">Система Трекера Валют</text>
+
+    <rect x="620" y="100" width="120" height="60" fill="#fff3e0" stroke="#f57c00" rx="10"/>
+    <text x="680" y="135" text-anchor="middle" font-size="12">API Курсов</text>
+
+    <rect x="620" y="240" width="120" height="60" fill="#fff3e0" stroke="#f57c00" rx="10"/>
+    <text x="680" y="275" text-anchor="middle" font-size="12">Уведомления</text>
+
+    <line x1="160" y1="190" x2="320" y2="190" stroke="#555" stroke-width="2" marker-end="url(#arrow)"/>
+    <line x1="480" y1="170" x2="620" y2="130" stroke="#555" stroke-width="2" marker-end="url(#arrow)"/>
+    <line x1="480" y1="210" x2="620" y2="270" stroke="#555" stroke-width="2" marker-end="url(#arrow)"/>
+
+    <defs>
+      <marker id="arrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+        <polygon points="0 0, 10 3.5, 0 7" fill="#555"/>
+      </marker>
+    </defs>
+  </svg>
+  <div class="legend">
+    <p><span style="background:#f3e5f5;border:1px solid #7b1fa2"></span> Пользователь</p>
+    <p><span style="background:#e8f5e9;border:1px solid #388e3c"></span> Система</p>
+    <p><span style="background:#fff3e0;border:1px solid #f57c00"></span> Внешние сервисы</p>
+  </div>
+</div>
+
+<!-- Контейнеры -->
+<div id="container" class="diagram">
+  <h2>Контейнеры</h2>
+  <svg viewBox="0 0 900 450">
+    <rect x="50" y="200" width="100" height="60" fill="#f3e5f5" stroke="#7b1fa2" rx="8"/>
+    <text x="100" y="235" text-anchor="middle" font-size="13">Пользователь</text>
+
+    <rect x="200" y="150" width="120" height="60" fill="#e3f2fd" stroke="#1976d2" rx="8"/>
+    <text x="260" y="185" text-anchor="middle" font-size="12">Веб-приложение</text>
+
+    <rect x="200" y="250" width="120" height="60" fill="#e3f2fd" stroke="#1976d2" rx="8"/>
+    <text x="260" y="285" text-anchor="middle" font-size="12">Мобильное</text>
+
+    <rect x="380" y="200" width="140" height="80" fill="#e3f2fd" stroke="#1976d2" rx="8"/>
+    <text x="450" y="245" text-anchor="middle" font-size="12">Backend API</text>
+
+    <ellipse cx="650" cy="240" rx="70" ry="40" fill="#fce4ec" stroke="#c2185b"/>
+    <text x="650" y="245" text-anchor="middle" font-size="12">БД PostgreSQL</text>
+
+    <rect x="720" y="150" width="120" height="60" fill="#fff3e0" stroke="#f57c00" rx="8"/>
+    <text x="780" y="185" text-anchor="middle" font-size="12">API Курсов</text>
+
+    <rect x="720" y="270" width="120" height="60" fill="#fff3e0" stroke="#f57c00" rx="8"/>
+    <text x="780" y="305" text-anchor="middle" font-size="12">Уведомления</text>
+
+    <defs>
+      <marker id="arrow2" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+        <polygon points="0 0, 10 3.5, 0 7" fill="#555"/>
+      </marker>
+    </defs>
+    <line x1="150" y1="230" x2="200" y2="180" stroke="#555" stroke-width="2" marker-end="url(#arrow2)"/>
+    <line x1="150" y1="230" x2="200" y2="280" stroke="#555" stroke-width="2" marker-end="url(#arrow2)"/>
+    <line x1="320" y1="180" x2="380" y2="240" stroke="#555" stroke-width="2" marker-end="url(#arrow2)"/>
+    <line x1="320" y1="280" x2="380" y2="240" stroke="#555" stroke-width="2" marker-end="url(#arrow2)"/>
+    <line x1="520" y1="240" x2="580" y2="240" stroke="#555" stroke-width="2" marker-end="url(#arrow2)"/>
+    <line x1="520" y1="220" x2="720" y2="180" stroke="#555" stroke-width="2" marker-end="url(#arrow2)"/>
+    <line x1="520" y1="260" x2="720" y2="300" stroke="#555" stroke-width="2" marker-end="url(#arrow2)"/>
+  </svg>
+</div>
+
+<!-- Компоненты -->
+<div id="component" class="diagram">
+  <h2>Компоненты Backend API</h2>
+  <svg viewBox="0 0 800 400">
+    <rect x="40" y="50" width="480" height="280" fill="none" stroke="#667eea" stroke-dasharray="10,5" rx="10"/>
+    <text x="60" y="40" fill="#667eea" font-weight="600">Backend API (Spring Boot)</text>
+
+    <rect x="70" y="80" width="100" height="60" fill="#e3f2fd" stroke="#1976d2" rx="8"/>
+    <text x="120" y="115" text-anchor="middle" font-size="11">Auth Service</text>
+
+    <rect x="200" y="80" width="100" height="60" fill="#e3f2fd" stroke="#1976d2" rx="8"/>
+    <text x="250" y="115" text-anchor="middle" font-size="11">Rates Collector</text>
+
+    <rect x="330" y="80" width="100" height="60" fill="#e3f2fd" stroke="#1976d2" rx="8"/>
+    <text x="380" y="115" text-anchor="middle" font-size="11">Alerts Engine</text>
+
+    <rect x="200" y="180" width="100" height="60" fill="#e3f2fd" stroke="#1976d2" rx="8"/>
+    <text x="250" y="215" text-anchor="middle" font-size="11">History Service</text>
+
+    <ellipse cx="650" cy="200" rx="70" ry="40" fill="#fce4ec" stroke="#c2185b"/>
+    <text x="650" y="205" text-anchor="middle" font-size="11">БД PostgreSQL</text>
+
+    <rect x="200" y="280" width="100" height="40" fill="#fff3e0" stroke="#f57c00" rx="8"/>
+    <text x="250" y="305" text-anchor="middle" font-size="11">API Курсов</text>
+
+    <rect x="480" y="280" width="100" height="40" fill="#fff3e0" stroke="#f57c00" rx="8"/>
+    <text x="530" y="305" text-anchor="middle" font-size="11">Push/Бот</text>
+
+    <defs>
+      <marker id="arrow3" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+        <polygon points="0 0, 10 3.5, 0 7" fill="#555"/>
+      </marker>
+    </defs>
+    <line x1="250" y1="140" x2="250" y2="180" stroke="#555" stroke-width="2" marker-end="url(#arrow3)"/>
+    <line x1="380" y1="140" x2="380" y2="200" stroke="#555" stroke-width="2" marker-end="url(#arrow3)"/>
+    <line x1="300" y1="200" x2="580" y2="200" stroke="#555" stroke-width="2" marker-end="url(#arrow3)"/>
+    <line x1="250" y1="240" x2="250" y2="280" stroke="#555" stroke-width="2" marker-end="url(#arrow3)"/>
+    <line x1="380" y1="200" x2="480" y2="280" stroke="#555" stroke-width="2" marker-end="url(#arrow3)"/>
+  </svg>
+</div>
+
+<script>
+  function show(id) {
+    document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+    document.querySelectorAll(".diagram").forEach(d => d.classList.remove("active"));
+    event.target.classList.add("active");
+    document.getElementById(id).classList.add("active");
+  }
+</script>
+
+</body>
+</html>
