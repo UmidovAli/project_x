@@ -10,8 +10,19 @@ const bot = new TelegramBot(process.env.BOT_TOKEN, { polling: true });
 const API_KEY = process.env.CURRENCY_API_KEY;
 const BASE_URL = "https://api.apilayer.com/currency_data";
 
+// --- Currencies by continent with RUB ---
+const currenciesByContinent = {
+  "Европа": ["EUR", "GBP", "CHF", "SEK", "NOK", "DKK", "RUB"],
+  "Азия": ["JPY", "CNY", "INR", "KRW", "SGD", "THB"],
+  "Америка": ["USD", "CAD", "BRL", "MXN", "ARS"],
+  "Африка": ["ZAR", "EGP", "NGN", "KES"],
+  "Океания": ["AUD", "NZD"]
+};
+
 // --- Helpers ---
-async function getRates(symbols = "USD,EUR,GBP,JPY") {
+const allCurrencies = Object.values(currenciesByContinent).flat().join(",");
+
+async function getRates(symbols = allCurrencies) {
   try {
     const res = await axios.get(`${BASE_URL}/live`, {
       headers: { apikey: API_KEY },
@@ -19,7 +30,7 @@ async function getRates(symbols = "USD,EUR,GBP,JPY") {
     });
 
     return Object.entries(res.data.quotes).map(([pair, rate]) => {
-      const currency = pair.slice(3); // USDXXX -> XXX
+      const currency = pair.slice(3);
       return { currency, rate };
     });
   } catch (err) {
@@ -72,19 +83,20 @@ bot.onText(/\/start/, async (msg) => {
   );
 });
 
+// --- Main menu: select continent ---
 bot.onText(/💰 Курсы валют/, async (msg) => {
   const chatId = msg.chat.id;
-  const rates = await getRates();
 
-  if (!rates.length) return bot.sendMessage(chatId, "Курсы валют пока не загружены 🕐");
+  const buttons = Object.keys(currenciesByContinent).map(continent => [
+    { text: continent, callback_data: `continent:${continent}` }
+  ]);
 
-  let text = "<b>Текущие курсы валют:</b>\n";
-  for (const r of rates) text += `• ${r.currency}: <b>${r.rate}</b>\n`;
-
-  const buttons = rates.map(r => [{ text: `Подписаться на ${r.currency}`, callback_data: `sub:${r.currency}` }]);
-  await bot.sendMessage(chatId, text, { parse_mode: "HTML", reply_markup: { inline_keyboard: buttons } });
+  await bot.sendMessage(chatId, "Выбери континент 🌍", {
+    reply_markup: { inline_keyboard: buttons }
+  });
 });
 
+// --- User subscriptions menu ---
 bot.onText(/📩 Мои подписки/, async (msg) => {
   const chatId = msg.chat.id;
   const subs = await getUserSubscriptions(chatId);
@@ -96,17 +108,50 @@ bot.onText(/📩 Мои подписки/, async (msg) => {
   await bot.sendMessage(chatId, text, { parse_mode: "HTML", reply_markup: { inline_keyboard: buttons } });
 });
 
-// --- Callback ---
+// --- Callback handling ---
 bot.on("callback_query", async (query) => {
   const chatId = query.message.chat.id;
-  const [action, currency] = query.data.split(":");
+  const [action, value] = query.data.split(":");
 
-  if (action === "sub") {
-    await addSubscription(chatId, currency);
-    await bot.answerCallbackQuery(query.id, { text: `✅ Подписка на ${currency} добавлена!` });
-  } else if (action === "unsub") {
-    await removeSubscription(chatId, currency);
-    await bot.answerCallbackQuery(query.id, { text: `❌ Отписка от ${currency} выполнена!` });
+  if (action === "continent") {
+    // Show currencies for the selected continent with current rate
+    const currencies = currenciesByContinent[value];
+    const rates = await getRates(currencies.join(","));
+    const rateMap = Object.fromEntries(rates.map(r => [r.currency, r.rate]));
+
+    const buttons = currencies.map(c => [{
+      text: `${c} (${rateMap[c]?.toFixed(2) || "–"})`,
+      callback_data: `sub:${c}`
+    }]);
+    buttons.push([{ text: "⬅️ Назад", callback_data: "back:menu" }]);
+
+    await bot.editMessageText(`Валюты в ${value}:`, {
+      chat_id: chatId,
+      message_id: query.message.message_id,
+      reply_markup: { inline_keyboard: buttons }
+    });
+  }
+
+  else if (action === "sub") {
+    await addSubscription(chatId, value);
+    await bot.answerCallbackQuery(query.id, { text: `✅ Подписка на ${value} добавлена!` });
+  }
+
+  else if (action === "unsub") {
+    await removeSubscription(chatId, value);
+    await bot.answerCallbackQuery(query.id, { text: `❌ Отписка от ${value} выполнена!` });
+  }
+
+  else if (action === "back" && value === "menu") {
+    const buttons = Object.keys(currenciesByContinent).map(continent => [
+      { text: continent, callback_data: `continent:${continent}` }
+    ]);
+
+    await bot.editMessageText("Выбери континент 🌍", {
+      chat_id: chatId,
+      message_id: query.message.message_id,
+      reply_markup: { inline_keyboard: buttons }
+    });
   }
 });
 
@@ -115,7 +160,7 @@ async function notifySubscribers(currency, newRate) {
   const res = await db.query("SELECT user_id FROM subscriptions WHERE currency = $1", [currency]);
   for (const row of res.rows) {
     try {
-      await bot.sendMessage(row.user_id, `💱 Новый курс ${currency}: <b>${newRate}</b>`, { parse_mode: "HTML" });
+      await bot.sendMessage(row.user_id, `💱 Новый курс ${currency}: <b>${newRate.toFixed(2)}</b>`, { parse_mode: "HTML" });
     } catch (err) {
       console.error("Ошибка уведомления:", err.message);
     }
@@ -128,6 +173,7 @@ let lastRates = {};
 
 async function checkUpdates() {
   const rates = await getRates();
+
   for (const { currency, rate } of rates) {
     if (lastRates[currency] && lastRates[currency] !== rate) {
       await notifySubscribers(currency, rate);
