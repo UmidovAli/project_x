@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Профиль — CurrencyTracker</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen">
+  <header class="p-6 container mx-auto flex justify-between items-center">
+    <a href="dashboard.html" class="text-xl font-semibold">Назад</a>
+    <button id="logoutBtn" class="px-3 py-2 bg-red-600 rounded">Выйти</button>
+  </header>
+
+  <main class="container mx-auto p-6">
+    <div class="max-w-2xl bg-white/5 p-6 rounded-xl glass">
+      <h2 class="text-2xl font-semibold mb-4">Профиль</h2>
+      <div class="space-y-2 mb-4">
+        <div><strong>Email:</strong> <span id="emailDisplay">—</span></div>
+        <div><strong>Роль:</strong> <span id="roleDisplay">—</span></div>
+        <div><strong>Пара:</strong> <span id="pairDisplay">—</span></div>
+        <div><strong>Лимит:</strong> <span id="limitDisplay">—</span></div>
+      </div>
+
+      <form id="updateForm" class="space-y-3">
+        <input id="newEmail" placeholder="Новый email" class="w-full p-2 bg-white/5 rounded" />
+        <input id="newPair" placeholder="Пара (USD/RUB)" class="w-full p-2 bg-white/5 rounded" />
+        <input id="newLimit" placeholder="Лимит" type="number" class="w-full p-2 bg-white/5 rounded" />
+        <div class="flex gap-3">
+          <button class="px-4 py-2 bg-green-400 rounded text-slate-900" type="submit">Обновить</button>
+        </div>
+      </form>
+
+      <hr class="my-4 border-white/10">
+
+      <form id="passwordForm" class="space-y-3">
+        <input id="oldPassword" type="password" placeholder="Старый пароль" class="w-full p-2 bg-white/5 rounded" required />
+        <input id="newPassword" type="password" placeholder="Новый пароль" class="w-full p-2 bg-white/5 rounded" required />
+        <button class="px-4 py-2 bg-blue-500 rounded" type="submit">Сменить пароль</button>
+      </form>
+    </div>
+  </main>
+
+  <script src="scripts.js"></script>
+</body>
+</html>

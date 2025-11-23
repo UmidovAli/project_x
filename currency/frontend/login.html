@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Вход — CurrencyTracker</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-b from-slate-900 to-[#07103a] min-h-screen flex items-center justify-center text-slate-100">
+  <div class="w-full max-w-md bg-white/5 p-8 rounded-2xl glass">
+    <h2 class="text-2xl font-bold mb-6">Войти</h2>
+    <form id="loginForm" class="space-y-4">
+      <input id="loginEmail" type="email" placeholder="Email" class="w-full p-3 bg-white/5 rounded" required>
+      <input id="loginPassword" type="password" placeholder="Пароль" class="w-full p-3 bg-white/5 rounded" required>
+      <button class="w-full bg-green-400 text-slate-900 p-3 rounded font-semibold">Войти</button>
+      <p class="text-sm text-slate-300">Нет аккаунта? <a href="register.html" class="text-green-300 hover:underline">Зарегистрироваться</a></p>
+    </form>
+  </div>
+  <script src="scripts.js"></script>
+</body>
+</html>

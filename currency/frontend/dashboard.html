@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Dashboard — CurrencyTracker</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen">
+  <header class="p-6 flex justify-between items-center container mx-auto">
+    <a href="index.html" class="text-xl font-semibold">CurrencyTracker</a>
+    <div class="flex gap-4 items-center">
+      <a href="profile.html" class="px-3 py-2 rounded bg-white/5">Профиль</a>
+      <button id="logoutTop" class="px-3 py-2 rounded bg-red-600">Выйти</button>
+    </div>
+  </header>
+
+  <main class="container mx-auto p-6">
+    <div class="grid gap-6 grid-cols-1 lg:grid-cols-3">
+      <!-- Left: controls -->
+      <div class="lg:col-span-1 bg-white/5 p-6 rounded-xl glass">
+        <h3 class="font-semibold mb-3">Настроить пару</h3>
+        <label class="text-sm text-slate-300">Пара</label>
+        <input id="pairInput" class="w-full p-2 rounded my-2 bg-white/5" placeholder="USD/RUB" />
+        <label class="text-sm text-slate-300">Лимит</label>
+        <input id="limitInput" type="number" class="w-full p-2 rounded my-2 bg-white/5" placeholder="100" />
+        <button id="savePair" class="w-full mt-3 bg-green-400 text-slate-900 p-2 rounded font-semibold">Сохранить</button>
+        <div class="mt-4">
+          <h4 class="text-sm text-slate-300">Текущее значение</h4>
+          <div id="currentRate" class="text-2xl font-bold mt-2">—</div>
+        </div>
+      </div>
+
+      <!-- Center: chart placeholder -->
+      <div class="lg:col-span-2 bg-white/5 p-6 rounded-xl glass">
+        <h3 class="font-semibold mb-3">График (история)</h3>
+        <div id="chart" class="h-64 bg-gradient-to-b from-white/5 to-white/3 rounded flex items-center justify-center text-slate-300">
+          Здесь будет график (Chart.js можно добавить позже)
+        </div>
+        <div class="mt-4 flex gap-2">
+          <button id="refreshBtn" class="px-3 py-2 bg-white/6 rounded">Обновить</button>
+          <button id="exportCsv" class="px-3 py-2 bg-white/6 rounded">Экспорт CSV</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="scripts.js"></script>
+</body>
+</html>
